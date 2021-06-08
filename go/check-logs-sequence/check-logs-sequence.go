@@ -4,14 +4,15 @@ import (
 	"errors"
 	"flag"
 	"fmt"
-	"github.com/papertrail/go-tail/follower"
-	log "github.com/sirupsen/logrus"
 	"io"
 	"os"
 	"sort"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/papertrail/go-tail/follower"
+	log "github.com/sirupsen/logrus"
 )
 
 type logSourceInfo struct {
@@ -150,7 +151,7 @@ func main() {
 			logsTotalInfo[name] = totalEntry
 
 			if reportData.totalLogsCollectedCount%reportCount == 0 {
-				report(reportData, logsCurrentInfo, logsTotalInfo)
+				report(reportData, logsCurrentInfo, logsTotalInfo, "graph.log")
 
 				// reset counting
 				logsCurrentInfo = make(map[string]logSourceInfo)
@@ -235,7 +236,7 @@ func parseLine(line string) (err error, name string, seq int64, logTag string, h
 	return nil, name, seq, logTag, hashID
 }
 
-func report(reportData reportStatistics, logsCurrentInfo map[string]logSourceInfo, logsTotalInfo map[string]logSourceInfo) {
+func report(reportData reportStatistics, logsCurrentInfo map[string]logSourceInfo, logsTotalInfo map[string]logSourceInfo, outFile string) {
 	now := time.Now()
 	deltaTimeInSeconds := now.Unix() - reportData.startMonitoringTime.Unix()
 	fmt.Printf("Report at: %s\n", now.String())
@@ -295,6 +296,22 @@ func report(reportData reportStatistics, logsCurrentInfo map[string]logSourceInf
 			totalEntry.loggedCount-totalEntry.collectedCount,
 		)
 
+		writeToFile(outFile, entry, name, deltaTimeInSeconds)
+
 	}
 	fmt.Printf("\n\n")
+}
+
+func writeToFile(outFile string, entry logSourceInfo, containerName string, deltaTimeInSeconds int64) {
+	f, err := os.OpenFile(outFile, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if err != nil {
+		log.Error("Could not open outFile")
+		log.Error(err)
+	}
+
+	f.WriteString(fmt.Sprintf("%s\t%d\t%d\t%d\n", containerName, deltaTimeInSeconds, entry.loggedCount, entry.collectedCount))
+
+	if err := f.Close(); err != nil {
+		log.Fatal(err)
+	}
 }

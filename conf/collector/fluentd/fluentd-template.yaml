@@ -43,7 +43,6 @@ objects:
               yum update -y;
               yum install -y gcc make autoconf;
               yum install -y redhat-rpm-config;
-              fluent-gem install fluent-plugin-grafana-loki;
               echo "Apply custom pre-commands";
               cp /fluentd-pre-sh/fluentd_pre.sh fluentd_pre.sh;
               chmod +x fluentd_pre.sh;
