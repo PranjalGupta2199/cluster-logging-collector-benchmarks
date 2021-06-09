@@ -173,7 +173,7 @@ then
   stress_profile="very-light"
   evacuate_node="false"
   # fluentd_image="docker.io/cognetive/origin-logging-fluentd:0.1"
-  fluentd_image="vibhav011/origin-aggregated-logging:fluentd"
+  fluentd_image="vibhav011/origin-aggregated-logging:fluentd-v3"
   fluent_conf_file="conf/collector/fluentd/fluentd.conf"
   gologfilewatcher_image="docker.io/cognetive/go-log-file-watcher-with-symlink-support-v0"
   fluentbit_image="fluent/fluent-bit:1.7-debug"
