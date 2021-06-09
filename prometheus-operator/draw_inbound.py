@@ -1,34 +1,29 @@
-import os
-import numpy as np
 import matplotlib.pyplot as plt 
-from collections import Counter
 
 def read(file):
     with open(file, 'r') as f:
         return f.read().strip().split('\n')
 
-dir = "/home/pranjal/Documents/no-throttle/3000"
-reports = os.listdir(dir)
+file = "./without throttle/heavy_loss_inbound.log"
+# file = "./without throttle/simple_inbound.log"
+group_key = "heavy"
+step = 2 if group_key == "heavy" else 8 
+# step = 1
+
+logs = read(file)
+logs = list(filter(lambda x: group_key in x, logs))
+logs = list(map(lambda x: x.split(), logs))
 
 x = []
 y = []
 
-for file in reports:
-    logs = list(map(lambda x: x.split('\t'), read(os.path.join(dir, file))))
-    if "throttle" in file:
-        x.append(file.strip('.log').split('_')[-1])
-    else:
-        x.append("no-throttle")
+for i in range(step, len(logs), step):
+    x.append(int(logs[i][1]) - int(logs[0][1])) # time
+    y.append(sum([int(logs[j][2]) - int(logs[j][3]) for j in range(i, i + step)]))
 
-    total_log_loss = 0
-    for i in range(1, len(logs)):
-        total_log_loss += int(logs[i][2]) - int(logs[i][3])
 
-    time = int(logs[-1][1]) - int(logs[0][1])
-    y.append(total_log_loss/time)
-
-fig = plt.figure()
-ax = fig.add_axes([0,0,0.5,0.5])
-print (x, y)
-ax.bar(x,y)
+plt.plot(x, y)
+plt.title("Log Loss - \"{}\" Group - Avg Loss - {}".format(group_key, sum(y)/x[-1] ))
+plt.xlabel("Time in sec")
+plt.ylabel("Log loss")
 plt.show()
