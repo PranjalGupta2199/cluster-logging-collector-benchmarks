@@ -44,6 +44,7 @@ objects:
               yum install -y gcc make autoconf;
               yum install -y redhat-rpm-config;
               echo "Apply custom pre-commands";
+              gem install fluent-plugin-throttle --ignore-dependencies;
               cp /fluentd-pre-sh/fluentd_pre.sh fluentd_pre.sh;
               chmod +x fluentd_pre.sh;
               ./fluentd_pre.sh;
