@@ -93,10 +93,10 @@ select_stress_profile() {
         maximum_logfile_size=1048576;
         ;;
       "graph-trial")
-        number_heavy_stress_containers=0;
-        heavy_containers_msg_per_sec=0;
-        number_low_stress_containers=1;
-        low_containers_msg_per_sec=3000;
+        number_heavy_stress_containers=2;
+        heavy_containers_msg_per_sec=200;
+        number_low_stress_containers=8;
+        low_containers_msg_per_sec=200;
         number_of_log_lines_between_reports=20000;
         maximum_logfile_size=1048576;
         ;;
@@ -173,7 +173,7 @@ then
   stress_profile="very-light"
   evacuate_node="false"
   # fluentd_image="docker.io/cognetive/origin-logging-fluentd:0.1"
-  fluentd_image="vibhav011/origin-aggregated-logging:fluentd-v5"
+  fluentd_image="vibhav011/origin-aggregated-logging:fluentd-v8.1"
   fluent_conf_file="conf/collector/fluentd/fluentd.conf"
   # gologfilewatcher_image="docker.io/cognetive/go-log-file-watcher-with-symlink-support-v0"
   gologfilewatcher_image="docker.io/cognetive/origin-log-file-metric-exporter"
