@@ -94,11 +94,12 @@ select_stress_profile() {
         ;;
       "graph-trial")
         number_heavy_stress_containers=2;
-        heavy_containers_msg_per_sec=200;
+        heavy_containers_msg_per_sec=300;
         number_low_stress_containers=8;
-        low_containers_msg_per_sec=200;
+        low_containers_msg_per_sec=75;
         number_of_log_lines_between_reports=20000;
         maximum_logfile_size=1048576;
+        # maximum_logfile_size=1073741824,
         ;;
       *) show_usage
         ;;
@@ -173,7 +174,8 @@ then
   stress_profile="very-light"
   evacuate_node="false"
   # fluentd_image="docker.io/cognetive/origin-logging-fluentd:0.1"
-  fluentd_image="vibhav011/origin-aggregated-logging:fluentd-v8.1"
+  # fluentd_image="vibhav011/origin-aggregated-logging:fluentd-v8.1"
+  fluentd_image="pranjalgupta2199/origin-aggregated-logging:fluentd-v8.3"
   fluent_conf_file="conf/collector/fluentd/fluentd.conf"
   # gologfilewatcher_image="docker.io/cognetive/go-log-file-watcher-with-symlink-support-v0"
   gologfilewatcher_image="docker.io/cognetive/origin-log-file-metric-exporter"
@@ -205,6 +207,3 @@ then
   print_pods_status
   print_usage_instructions
 fi
-
-
-
